@@ -1,0 +1,127 @@
+<script>
+    function addstudent(){
+        $('#studentInfoForm').form('clear');
+        $('#studentInfo_dialog').dialog('open').dialog('setTitle','新增学生信息');
+    }
+    function caozuo(value,row,index){
+        return "<a href='javascript:void(0)' class='easyui-linkbutton' iconCls:'icon-search' plain=true onclick='editstudent("+index+")'>编辑</a> |  "
+            +"<a href='javascript:void(0)' class='easyui-linkbutton' iconCls:'icon-search' plain=true onclick='deletestudent("+index+")' >删除</a>";
+    }
+    function savestudent() {
+        $('#studentInfoForm').form('submit', {
+                url:"/demo/SaveOrUpdateStudent",
+        success:function(data){
+            var obj=$.parseJSON(data);
+            if(obj.success) {
+                $('#studentInfo_dialog').dialog('close')
+                $('#studentInfo_datagrid').datagrid('reload');
+                $.messager.show({
+                    title: '系统提示',
+                    msg: obj.msg,
+                    timeout: 5000,
+                    showType: 'show'
+                });
+            }
+        }
+    });
+    }
+    function editstudent(rowindex) {
+                $('#studentInfo_datagrid').datagrid('selectRow',rowindex);
+        var row=$('#studentInfo_datagrid').datagrid('getSelected');
+        if(row){
+            $('#studentInfoForm').form('load',row);
+            $('#studentInfo_dialog').dialog('open').dialog('setTitle','编辑学生信息');
+        }
+    }
+    function deletestudent(rowindex) {
+                 $('#studentInfo_datagrid').datagrid('selectRow',rowindex);
+        var row=$('#studentInfo_datagrid').datagrid('getSelected');
+        if(row){
+            $.messager.confirm('确认','您确认想要删除记录吗？',function(r){
+                if (r){
+                   $.ajax({
+                       url:'/demo/deletestudent',
+                       type:"post",
+                       dataType:'json',
+                       data:{
+                           studentNumber:row.studentNumber
+                       },
+                       success:function (data) {
+                           if(data.success){
+                               $('#studentInfo_datagrid').datagrid('reload');
+                               $.messager.show({
+                                   title:'系统提示',
+                                   msg:data.msg,
+                                   timeout:5000,
+                                   showType:'show'
+                               });
+                           }
+                       }
+                   })
+                }
+            });
+        }
+    }
+</script>
+<div style="margin:10px">
+    <table id="studentInfo_datagrid" title="学生信息表" class="easyui-datagrid" style="width:960px;height:430px"
+           data-options="
+									url:'/demo/getALLStudentInfo',
+							 fitColumns:true,
+						   singleSelect:true,
+						        striped:true,
+							 pagination:true,
+							 rownumbers:true,
+							   pageSize:5,
+							   pageList:[5,10,20,30,40,50],
+							   toolbar: '#studentInfo_toobar'
+						   ">
+        <thead>
+        <tr>
+            <th data-options="field:'studentNumber',width:120">学号</th>
+            <th data-options="field:'studentName',width:100">姓名</th>
+            <th data-options="field:'studentClass',width:100">所在班级</th>
+            <th data-options="field:'studentStay',width:100">所住寝室</th>
+            <th data-options="field:'studentAddress',width:120">个人籍贯</th>
+            <th data-options="field:'caozuo',width:120,formatter: function(value,row,index){
+								return caozuo(value,row,index);
+						}">相关操作</th>
+        </tr>
+        </thead>
+    </table>
+    <div id="studentInfo_toobar" style="margin-bottom:5px;padding:5px">
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="addstudent()">新增学生</a>
+    </div>
+
+    <div id="studentInfo_dialog" class="easyui-dialog" style="width:450px;height:320px;padding:20px;"
+         data-options="iconCls:'icon-edit',resizable:true,modal:true,buttons:'#studentInfo_button',closable:false,closed:true">
+        <div class="ftitle">新增/编辑学生信息</div>
+        <form  id="studentInfoForm" method="post">
+            <div class="fitem" style="text-align:center">
+                <label>学生学号</label>
+                <input type="hidden" id="id" name="id">
+                <input class="easyui-textbox" style="width:250px;height:25px" name="studentNumber">
+            </div>
+            <div class="fitem" style="text-align:center">
+                <label>学生姓名</label>
+                <input class="easyui-textbox" style="width:250px;height:25px" name="studentName">
+            </div>
+            <div class="fitem" style="text-align:center">
+                <label>所在班级</label>
+                <input class="easyui-textbox" style="width:250px;height:25px" name="studentClass">
+            </div>
+            <div class="fitem" style="text-align:center">
+                <label>所住寝室</label>
+                <input class="easyui-textbox" style="width:250px;height:25px" name="studentStay">
+            </div>
+            <div class="fitem" style="text-align:center">
+                <label>个人籍贯</label>
+                <input class="easyui-textbox" style="width:250px;height:25px" name="studentAddress">
+            </div>
+        </form>
+    </div>
+    <div id="studentInfo_button" style="margin-bottom:5px">
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="savestudent()">保存</a>
+        <a href="javascript:$('#studentInfo_dialog').dialog('close')" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'">关闭</a>
+    </div>
+</div>

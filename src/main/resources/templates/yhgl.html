@@ -1,0 +1,228 @@
+<style type="text/css">
+    .ftitle {
+        font-size: 14px;
+        font-weight: bold;
+        padding: 5px 0;
+        margin-bottom: 10px;
+        border-bottom: 1px solid #ccc;
+    }
+    .fitem {
+        margin-bottom: 5px;
+    }
+
+    .fitem label {
+        display: inline-block;
+        width: 80px;
+    }
+</style>
+<script>
+    $.extend($.fn.validatebox.defaults.rules, {
+        equals: {
+            validator: function(value,param){
+                return value == $(param[0]).val();
+            },
+            message: '两次输入的密码不一致'
+        }
+    });
+    function caozuo(value,row,index){
+        return " <a href=\"javascript:void(0)\" class=\"easyui-linkbutton\" data-options=\"iconCls:'icon-ok'\" onclick='editUser("+index+")'>编辑用户</a> | " +
+               " <a href=\"javascript:void(0)\" class=\"easyui-linkbutton\" data-options=\"iconCls:'icon-ok'\" onclick='deleteUser("+index+")'>删除用户</a> | " +
+               " <a href=\"javascript:void(0)\" class=\"easyui-linkbutton\" data-options=\"iconCls:'icon-ok'\" onclick='updatePwd("+index+")'>修改密码</a>";
+    }
+    function NewsUser() {
+        $('#NewsYhglForm').form('clear');
+        $('#account').textbox('readonly',false);
+        $('#NewsUser_dialog').dialog('open').dialog('setTitle','新增用户信息');
+    }
+    function editUser(rowindex) {
+                 $('#yhgl_datagrid').datagrid('selectRow',rowindex);
+        var row= $('#yhgl_datagrid').datagrid('getSelected');
+        if(row){
+            $('#NewsYhglForm').form('load',row);
+            $('#account').textbox('readonly');
+            $('#NewsUser_dialog').dialog('open').dialog('setTitle','编辑用户信息');
+        }
+    }
+    function deleteUser(rowindex) {
+        $.messager.progress();
+        $('#yhgl_datagrid').datagrid('selectRow',rowindex);
+        var row= $('#yhgl_datagrid').datagrid('getSelected');
+        if(row){
+            $.messager.confirm('系统提示','您确认想要删除'+row.name+'信息记录吗？',function(r){
+                if (r){
+                    $.ajax({
+                         url:'/demo/deleteUser',
+                        type:"post",
+                        dataType:'json',
+                        data:{
+                             id:row.id
+                        },
+                        success:function (data) {
+                            $.messager.progress('close');
+                            if(data.success){
+                                $.messager.alert('系统提示',data.msg,'info');
+                                $('#yhgl_datagrid').datagrid('reload');
+                            }else{
+                                $.messager.alert('系统提示',data.msg,'error');
+                            }
+                        },
+                        error:function () {
+                            $.messager.progress('close');
+                            alert("出错了，请联系管理员！");
+                        }
+                    })
+                }
+            });
+        }
+    }
+    function SaveOrUpdateUser() {
+        $.messager.progress();
+        $('#NewsYhglForm').form('submit', {
+                url:'/demo/SaveOrUpdateUser',
+            success:function(data){
+                $.messager.progress('close');
+                var obj=$.parseJSON(data);
+                if(obj.success){
+                    $('#NewsUser_dialog').dialog('close');
+                    $('#yhgl_datagrid').datagrid('reload');
+                }else{
+                    $('#NewsUser_dialog').dialog('close');
+                }
+                $.messager.show({
+                       title:'系统提示',
+                         msg:obj.msg,
+                    showType:'slide'
+                });
+           }
+      });
+    }
+    function updatePwd(rowindex) {
+                 $('#yhgl_datagrid').datagrid('selectRow',rowindex);
+        var row= $('#yhgl_datagrid').datagrid('getSelected');
+        if(row){
+            $('#NewsYhglpwdForm').form('clear');
+            $('#NewsYhglpwdForm').form('load',row);
+            $('#name').textbox('readonly');
+            $('#account1').textbox('readonly');
+            $("#password").val('')
+            $('#updateUserpwd_dialog').dialog('open').dialog('setTitle','更新'+row.name+'用户密码');
+        }
+    }
+    function updateUserPwd() {
+        $.messager.progress();
+        $('#NewsYhglpwdForm').form('submit', {
+                url:'/demo/updateUserPwd',
+            success:function(data){
+                $.messager.progress('close');
+                var obj=$.parseJSON(data);
+                if(obj.success){
+                    $('#updateUserpwd_dialog').dialog('close');
+                    $('#yhgl_datagrid').datagrid('reload');
+                }else{
+                    $('#updateUserpwd_dialog').dialog('close');
+                }
+                $.messager.show({
+                    title:'系统提示',
+                    msg:obj.msg,
+                    showType:'slide'
+                });
+            }
+        });
+    }
+    function searchUser() {
+        var account=$("#searchname").val();
+        $('#yhgl_datagrid').datagrid({
+             queryParams: {
+                    url:'/demo/GetAllUserInfo',
+                account:account,
+            }
+        });
+    }
+</script>
+<div style="margin: 10px">
+    <table id="yhgl_datagrid" title="用户管理" class="easyui-datagrid" style="width:960px;height:450px" data-options="
+                            url:'/demo/GetAllUserInfo',
+                     fitColumns:true,
+                   singleSelect:true,
+                        striped:true,
+                     rownumbers:true,
+                     pagination:true,
+                       pageSize:10,
+                       pageList:[10,20,30,40,50],
+                        toolbar: '#yhgl_toobar'
+                ">
+        <thead>
+        <tr>
+            <th data-options="field:'account',width:100">用户编号</th>
+            <th data-options="field:'name',width:80">用户姓名</th>
+            <th data-options="field:'sex',width:60">用户性别</th>
+            <th data-options="field:'age',width:60">用户年龄</th>
+            <th data-options="field:'telphone',width:100">联系电话</th>
+            <th data-options="field:'address',width:120">家庭住址</th>
+            <th data-options="field:'caozuo',width:180,formatter: function(value,row,index){
+                return caozuo(value,row,index);
+            }">相关操作</th>
+        </tr>
+        </thead>
+    </table>
+    <div id="yhgl_toobar" style="padding: 5px">
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="NewsUser()">新增用户</a>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;搜索用户(账号查找)：<input class="easyui-textbox" style="width:300px" id="searchname">
+                 <a class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="searchUser()">搜索</a>
+    </div>
+    <!--新增用户表单-->
+    <div id="NewsUser_dialog" class="easyui-dialog" style="width:500px;height:350px;padding: 10px"data-options="
+                iconCls:'icon-save',resizable:true,modal:true,buttons:'#yhgl_dialog_btn',closable:false,closed:true">
+       <div class="ftitle">新增/编辑用户信息</div>
+        <form id="NewsYhglForm" method="post">
+           <div class="fitem" style="text-align: center">
+                 <input type="hidden" id="id" name="id">
+                用户编号：<input class="easyui-textbox" style="width:300px" id="account" name="account">
+           </div>
+            <div class="fitem" style="text-align: center">
+                用户姓名：<input class="easyui-textbox" style="width:300px" name="name">
+            </div>
+            <div class="fitem" style="text-align: center">
+                用户性别：<input class="easyui-textbox" style="width:300px" name="sex">
+            </div>
+            <div class="fitem" style="text-align: center">
+                用户年龄：<input class="easyui-textbox" style="width:300px" name="age">
+            </div>
+            <div class="fitem" style="text-align: center">
+               联系电话：<input class="easyui-textbox" style="width:300px" name="telphone">
+            </div>
+            <div class="fitem" style="text-align: center">
+                家庭住址：<input class="easyui-textbox" data-options="multiline:'true'" style="width:300px;height: 55px" name="address">
+            </div>
+        </form>
+    </div>
+    <div id="yhgl_dialog_btn">
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="SaveOrUpdateUser()">保存</a>
+        <a href="javascript:$('#NewsUser_dialog').dialog('close')" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'">关闭</a>
+    </div>
+    <!--修改用户密码-->
+    <div id="updateUserpwd_dialog" class="easyui-dialog" style="width:500px;height:300px;padding: 10px"data-options="
+                iconCls:'icon-save',resizable:true,modal:true,buttons:'#yhglpwd_dialog_btn',closable:false,closed:true">
+        <div class="ftitle">更新用户密码</div>
+        <form id="NewsYhglpwdForm" method="post">
+            <div class="fitem" style="text-align: center">
+                用户编号：<input class="easyui-textbox" style="width:300px" id="account1" name="account">
+            </div>
+            <div class="fitem" style="text-align: center">
+                用户姓名：<input class="easyui-textbox" style="width:300px" id="name" name="name">
+            </div>
+            <div class="fitem" style="text-align: center">
+                用户密码：<input  class="easyui-validatebox" style="width:300px" type="password" id="pwd" name="pwd"
+                                 data-options="required:true">
+            </div>
+            <div class="fitem" style="text-align: center">
+                确认密码：<input  class="easyui-validatebox" style="width:300px" type="password" name="repwd" id="repwd"
+                               required="required" validType="equals['#pwd']" >
+            </div>
+        </form>
+    </div>
+    <div id="yhglpwd_dialog_btn">
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-reload'" onclick="updateUserPwd()">更新密码</a>
+        <a href="javascript:$('#updateUserpwd_dialog').dialog('close')" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'">关闭</a>
+    </div>
+</div>

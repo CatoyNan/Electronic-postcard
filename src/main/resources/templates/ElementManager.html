@@ -1,0 +1,177 @@
+<script>
+    function addElementuser(){
+        $('#ElementmanagerForm').form('clear');
+        $('#elementNumber').textbox('readonly');
+        $('#elementNumber').textbox('setValue','用户号由系统自动生成');
+        $('#Elementmanager_dialog').dialog('open').dialog('setTitle','新增电力用户');
+    }
+    function caozuo(value,row,index){
+        return "<a href='javascript:void(0)' class='easyui-linkbutton' iconCls:'icon-search' plain=true onclick='editElemntuser("+index+")'>编辑</a> |  "
+            +"<a href='javascript:void(0)' class='easyui-linkbutton' iconCls:'icon-search' plain=true onclick='ElemntUser_charge("+index+")' >充值缴费</a> |"
+            +"<a href='javascript:void(0)' class='easyui-linkbutton' iconCls:'icon-search' plain=true onclick='deleteElemntUser("+index+")' >删除</a>";
+    }
+    function saveElementuser() {
+        $('#ElementmanagerForm').form('submit', {
+            url:"/demo/SaveOrUpdateElementUser",
+            success:function(data){
+                var obj=$.parseJSON(data);
+                if(obj.success) {
+                    $('#Elementmanager_dialog').dialog('close')
+                    $('#Elementmanager_datagrid').datagrid('reload');
+                    $.messager.show({
+                        title: '系统提示',
+                        msg: obj.msg,
+                        timeout: 5000,
+                        showType: 'show'
+                    });
+                }
+            }
+        });
+    }
+    function Elementcharge() {
+        $('#ElementmanagerchargeForm').form('submit', {
+            url:"/demo/elementcharge",
+            success:function(data){
+                var obj=$.parseJSON(data);
+                if(obj.success) {
+                    $('#Elementmanagercharge_dialog').dialog('close')
+                    $('#Elementmanager_datagrid').datagrid('reload');
+                    $.messager.show({
+                        title: '系统提示',
+                        msg: obj.msg,
+                        timeout: 5000,
+                        showType: 'show'
+                    });
+                }
+            }
+        });
+    }
+    function ElemntUser_charge(rowindex) {
+                 $('#Elementmanager_datagrid').datagrid('selectRow',rowindex);
+        var row=$('#Elementmanager_datagrid').datagrid('getSelected');
+        if(row){
+            $('#ElementmanagerchargeForm').form('load',row);
+            $('#element_number').textbox('readonly');
+            $('#elmentuser').textbox('readonly');
+            $('#Elementmanagercharge_dialog').dialog('open').dialog('setTitle','电力缴费');
+        }
+    }
+
+    function editElemntuser(rowindex) {
+        $('#Elementmanager_datagrid').datagrid('selectRow',rowindex);
+        var row=$('#Elementmanager_datagrid').datagrid('getSelected');
+        if(row){
+            $('#ElementmanagerForm').form('load',row);
+            $('#elementNumber').textbox('readonly');
+            $('#Elementmanager_dialog').dialog('open').dialog('setTitle','编辑电力用户信息');
+        }
+    }
+    function deleteElemntUser(rowindex) {
+        $('#Elementmanager_datagrid').datagrid('selectRow',rowindex);
+        var row=$('#Elementmanager_datagrid').datagrid('getSelected');
+        if(row){
+            $.messager.confirm('确认','您确认想要删除记录吗？',function(r){
+                if (r){
+                    $.ajax({
+                        url:'/demo/deleteElemntUser',
+                        type:"post",
+                        dataType:'json',
+                        data:{
+                            elementNumber:row.elementNumber
+                        },
+                        success:function (data) {
+                            if(data.success){
+                                $('#Elementmanager_datagrid').datagrid('reload');
+                                $.messager.show({
+                                    title:'系统提示',
+                                    msg:data.msg,
+                                    timeout:5000,
+                                    showType:'show'
+                                });
+                            }
+                        }
+                    })
+                }
+            });
+        }
+    }
+</script>
+<div style="margin:10px">
+    <table id="Elementmanager_datagrid" title="电力用户信息表" class="easyui-datagrid" style="width:960px;height:430px"
+           data-options="
+									url:'/demo/getALLElementUser',
+							 fitColumns:true,
+						   singleSelect:true,
+						        striped:true,
+							 pagination:true,
+							 rownumbers:true,
+							   pageSize:5,
+							   pageList:[5,10,20,30,40,50],
+							   toolbar: '#Elementmanager_toobar'
+						   ">
+        <thead>
+        <tr>
+            <th data-options="field:'elementNumber',width:120">用户号</th>
+            <th data-options="field:'elmentuser',width:100">用户姓名</th>
+            <th data-options="field:'currentelement',width:100">当前电量</th>
+            <th data-options="field:'chargeUnit',width:100">充值单位</th>
+            <th data-options="field:'caozuo',width:120,formatter: function(value,row,index){
+								return caozuo(value,row,index);
+						}">相关操作</th>
+        </tr>
+        </thead>
+    </table>
+    <div id="Elementmanager_toobar" style="margin-bottom:5px;padding:5px">
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="addElementuser()">新增电力用户</a>
+    </div>
+
+    <div id="Elementmanager_dialog" class="easyui-dialog" style="width:450px;height:320px;padding:20px;"
+         data-options="iconCls:'icon-edit',resizable:true,modal:true,buttons:'#Elementmanager_button',closable:false,closed:true">
+        <div class="ftitle">新增/编辑电力用户信息</div>
+        <form  id="ElementmanagerForm" method="post">
+            <div class="fitem" style="text-align:center">
+                <label>用户号</label>
+                <input class="easyui-textbox" style="width:250px;height:25px" name="elementNumber" id="elementNumber">
+            </div>
+            <div class="fitem" style="text-align:center">
+                <label>用户姓名</label>
+                <input class="easyui-textbox" style="width:250px;height:25px" name="elmentuser">
+            </div>
+            <div class="fitem" style="text-align:center">
+                <label>管辖单位</label>
+                <select  class="easyui-combobox"  style="width:250px;height:25px" name="chargeUnit">
+                    <option value="丽水学院后勤服务中心">丽水学院后勤服务中心</option>
+                    <option value="国家电网中心">国家电网中心</option>
+                </select>
+            </div>
+        </form>
+    </div>
+    <div id="Elementmanager_button" style="margin-bottom:5px">
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="saveElementuser()">保存</a>
+        <a href="javascript:$('#Elementmanager_dialog').dialog('close')" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'">关闭</a>
+    </div>
+
+
+    <div id="Elementmanagercharge_dialog" class="easyui-dialog" style="width:450px;height:320px;padding:20px;"
+         data-options="iconCls:'icon-edit',resizable:true,modal:true,buttons:'#Elementmanagercharge_button',closable:false,closed:true">
+        <div class="ftitle">电力费用充值界面</div>
+        <form  id="ElementmanagerchargeForm" method="post">
+            <div class="fitem" style="text-align:center">
+                <label>用户号</label>
+                <input class="easyui-textbox" style="width:250px;height:25px" name="elementNumber" id="element_number">
+            </div>
+            <div class="fitem" style="text-align:center">
+                <label>用户姓名</label>
+                <input class="easyui-textbox" style="width:250px;height:25px" name="elmentuser" id="elmentuser" >
+            </div>
+            <div class="fitem" style="text-align:center">
+                <label>充值金额</label>
+                <input class="easyui-textbox" style="width:250px;height:25px" name="chargeMoeny">
+            </div>
+        </form>
+    </div>
+    <div id="Elementmanagercharge_button" style="margin-bottom:5px">
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="Elementcharge()">确认充值</a>
+        <a href="javascript:$('#Elementmanagercharge_dialog').dialog('close')" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'">关闭</a>
+    </div>
+</div>

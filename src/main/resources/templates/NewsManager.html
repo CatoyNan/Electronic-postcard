@@ -1,0 +1,139 @@
+<script>
+    function addNews(){
+        $('#NewsmanagerForm').form('clear');
+        $('#Newsmanager_dialog').dialog('open').dialog('setTitle','新增新闻信息');
+
+    }
+    function caozuo(value,row,index){
+       return "<a href='javascript:void(0)' class='easyui-linkbutton' iconCls:'icon-search' plain=true onclick='editNewsContent("+index+")'>编辑新闻</a> |  "
+                +"<a href='javascript:void(0)' class='easyui-linkbutton' iconCls:'icon-search' plain=true onclick='deleteNews("+index+")' >删除新闻</a>";
+    }
+    function saveNews() {
+        $('#NewsmanagerForm').form('submit', {
+            url:"/demo/SaveNewsInfo",
+            success:function(data){
+                var obj=$.parseJSON(data);
+                if(obj.success) {
+                    $('#Newsmanager_dialog').dialog('close')
+                    $('#Newsmanager_datagrid').datagrid('reload');
+                    $.messager.show({
+                        title: '系统提示',
+                        msg: obj.msg,
+                        timeout: 5000,
+                        showType: 'show'
+                    });
+                }
+            }
+        });
+    }
+    function editNewsContent(rowindex) {
+                 $('#Newsmanager_datagrid').datagrid('selectRow',rowindex);
+        var row=$('#Newsmanager_datagrid').datagrid('getSelected');
+        if(row){
+            $('#Newsmanager.0Form').form('load',row);
+            $('#Newsmanager_dialog').dialog('open').dialog('setTitle','编辑新闻信息');
+        }
+    }
+    function deleteNews(rowindex) {
+                $('#Newsmanager_datagrid').datagrid('selectRow',rowindex);
+        var row=$('#Newsmanager_datagrid').datagrid('getSelected');
+        if(row){
+            $.messager.confirm('温馨提示','您确定要删除该条新闻信息吗？',function(r){
+                if (r){
+                    $.ajax({
+                        url:'/demo/deleteNewsInfo',
+                        type:"post",
+                        dataType:'json',
+                        data:{
+                            news_id:row.news_id
+                        },
+                        success:function (data) {
+                            if(data.success){
+                                $('#Newsmanager_datagrid').datagrid('reload');
+                                $.messager.show({
+                                    title:'系统提示',
+                                    msg:data.msg,
+                                    timeout:5000,
+                                    showType:'show'
+                                });
+                            }
+                        },
+                        error:function () {
+                            alert("出错了，请联系管理员！");
+                        }
+                    })
+                }
+            });
+        }
+    }
+</script>
+<div style="margin:10px">
+    <table id="Newsmanager_datagrid" title="新闻信息列表" class="easyui-datagrid" style="width:960px;height:430px"
+           data-options="
+									url:'/demo/getALLNewsList',
+							 fitColumns:true,
+						   singleSelect:true,
+						        striped:true,
+							 pagination:true,
+							     nowrap:false,
+							 rownumbers:true,
+							   pageSize:5,
+							   pageList:[5,10,20,30,40,50],
+							    toolbar: '#Newsmanager_toobar'
+						   ">
+        <thead>
+        <tr>
+            <th data-options="field:'news_type',width:80">新闻类型</th>
+            <th data-options="field:'news_title',width:180">新闻标题</th>
+            <th data-options="field:'news_author',width:80">发布部门</th>
+            <th data-options="field:'news_date',width:80">发布时间</th>
+            <th data-options="field:'caozuo',width:120,align:'center',formatter: function(value,row,index){
+								return caozuo(value,row,index);
+						}">相关操作</th>
+        </tr>
+        </thead>
+    </table>
+    <div id="Newsmanager_toobar" style="margin-bottom:5px;padding:5px">
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="addNews()">发布新闻</a>
+    </div>
+
+    <div id="Newsmanager_dialog" class="easyui-dialog" style="width:750px;height:700px;padding:20px;"
+                  data-options="iconCls:'icon-edit',resizable:true,modal:true,buttons:'#Newsmanager_button',closable:false,closed:true ">
+        <div class="ftitle">编辑新闻</div>
+        <form  id="NewsmanagerForm" method="post">
+            <div class="fitem" style="text-align: center">
+                    <input name="news_id" id="news_id" type="hidden">
+                    <label>新闻类型</label>
+                    <select  class="easyui-combobox"  style="width:250px;height:25px" name="news_type">
+                        <option value="通知公告">通知公告</option>
+                        <option value="丽院要闻">丽院要闻</option>
+                        <option value="学术动态">学术动态</option>
+                        <option value="教学信息">教学信息</option>
+                    </select>
+            </div>
+            <div class="fitem" style="text-align: center">
+                <label>新闻标题</label>
+                <input class="easyui-textbox" style="width:250px;height:25px" name="news_title">
+            </div>
+            <div class="fitem" style="text-align: center">
+                    <label>所属部门</label>
+                    <select  class="easyui-combobox"  style="width:250px;height:25px" name="news_author">
+                        <option value="学工部">学工部</option>
+                        <option value="教务处">教务处</option>
+                        <option value="后勤服务中心">后勤服务中心</option>
+                        <option value="学生处">学生处</option>
+                        <option value="校长办公室">校长办公室</option>
+                        <option value="团委">团委</option>
+                    </select>
+            </div>
+            <div class="ftitle">新闻内容</div>
+            <div class="fitem" style="text-align: center">
+                <input  name="news_content" class="easyui-textbox" data-options="multiline:true" style="width:650px;height: 400px">
+            </div>
+        </form>
+    </div>
+    <div id="Newsmanager_button" style="margin-bottom:5px">
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="saveNews()">保存新闻</a>
+        <a href="javascript:$('#Newsmanager_dialog').dialog('close')" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'">取消编辑</a>
+    </div>
+</div>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+	<title>校园百事通后台管理系统</title>
+	<link rel="stylesheet" type="text/css" href="jquery-easyui-v1.5.3/themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="jquery-easyui-v1.5.3/themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+	<script type="text/javascript"  src="jquery-easyui-v1.5.3/jquery.min.js"></script>
+	<script type="text/javascript" src="jquery-easyui-v1.5.3/jquery.easyui.min.js"></script>
+	<script type="text/javascript"  src="jquery-easyui-v1.5.3/locale/easyui-lang-zh_CN.js"></script>
+	<script type="text/javascript" src="js/datagrid-detailview.js"></script>
+	<script type="text/javascript" src="js/easyui_valid.js"></script>
+	<script type="text/javascript" src="js/vue.min.js"></script>
+	<!--百度编辑器配置文件-->
+	<script type="text/javascript" src="ueditor1_4_3_3/ueditor.config.js"></script>
+	<script type="text/javascript" src="ueditor1_4_3_3/ueditor.all.js"></script>
+	<script type="text/javascript" charset="utf-8" src="ueditor1_4_3_3/lang/zh-cn/zh-cn.js"></script>
+	<script src="https://cdn.hcharts.cn/highcharts/highcharts.js"></script>
+	<script>
+	  function addstudent(){
+		$('#studentInfoForm').form('clear');
+		$('#studentInfo_dialog').dialog('open');
+	  }
+	  function caozuo(value,row,index){
+		return "<a href='javascript:void(0)' class='easyui-linkbutton' iconCls:'icon-search' plain=true onclick='editstudent("+index+")'>编辑</a> |  "
+				+"<a href='javascript:void(0)' class='easyui-linkbutton' iconCls:'icon-search' plain=true onclick='deletestudent("+index+")' >删除</a>";
+	  }
+	  function easyuiTab(objs) {
+		  var tab=$('#main_tab');
+		  if(tab.tabs('exists',objs.title)){
+		      tab.tabs('select',objs.title);
+		  }else{
+		      tab.tabs('add',{
+                  title:objs.title,
+                  href:objs.href,
+                  closable:true,
+                  tools:[{
+                      iconCls:'icon-mini-refresh',
+                      handler:function(){
+                          alert('refresh');
+                      }
+                  }]
+              });
+		  }
+      }
+	</script>
+</head>
+<body class="easyui-layout">
+	<div id="title" data-options="region:'north',border:false" style="height:75px;padding:10px">
+		<div style="float: left">
+			<div id="title_index">校园百事通移动终端后台监控管理系统</div>
+		</div>
+		<div id="clock" style="float: left">
+			<div style="float: left">
+				<p class="date">{{ date }}</p>
+				<p class="time">{{ time }}</p>
+			</div>
+			<div  style="float: right;margin-left: 200px">
+				<p class="time" th:text="'管理员：'+${session.admin.name}+'!你好'"></p>
+			</div>
+		</div>
+	</div>
+	<div data-options="region:'west'" style="width:250px;">
+			<div class="easyui-panel" title="功能菜单" data-options="fit:true,border:false,iconCls:'icon-tip'">
+				<ul id="menu_tree" class="easyui-tree" data-options="
+							url:'/demo/getAsyntree',
+						  lines:true,
+						  onClick: function(node){
+						       if($('#menu_tree').tree('isLeaf',node.target)){
+						       		easyuiTab({
+						  				title:node.text,
+						  		     href:node.attributes.url
+						  		});
+						       }
+							}
+					">
+				</ul>
+			</div>
+	</div>
+	<div data-options="region:'south',border:true" style="height:45px;text-align:center;padding: 5px">
+		<p>2018@Copy  sunshine团队制作 ||版权所有，拒绝盗版</p>
+	</div>
+	<div data-options="region:'center',title:'欢迎进入校园综合信息服务平台终端监控系统',iconCls:'icon-tip'">
+		<div id="main_tab" class="easyui-tabs" data-options="fit:true,border:false">
+			<div title="欢迎界面" style="text-align: match-parent">
+				<div id="container" style="min-width:400px;height:450px"></div>
+			</div>
+		</div>
+	</div>
+    <script>
+        Highcharts.setOptions({
+            global: {
+                useUTC: false
+            }
+        });
+        function activeLastPointToolip(chart) {
+            var points = chart.series[0].points;
+            chart.tooltip.refresh(points[points.length -1]);
+        }
+        var chart = Highcharts.chart('container', {
+            chart: {
+                type: 'spline',
+                marginRight: 10,
+                events: {
+                    load: function () {
+                        var series = this.series[0],
+                            chart = this;
+                        activeLastPointToolip(chart);
+                        setInterval(function () {
+                            var x = (new Date()).getTime(), // 当前时间
+                                y = Math.random();          // 随机值
+                            series.addPoint([x, y], true, true);
+                            activeLastPointToolip(chart);
+                        }, 1000);
+                    }
+                }
+            },
+            title: {
+                text: '网站在线人数实时数据'
+            },
+            xAxis: {
+                type: 'datetime',
+                tickPixelInterval: 150
+            },
+            yAxis: {
+                title: {
+                    text: null
+                }
+            },
+            tooltip: {
+                formatter: function () {
+                    return '<b>' + this.series.name + '</b><br/>' +
+                        Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>' +
+                        Highcharts.numberFormat(this.y, 2);
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            series: [{
+                name: '随机数据',
+                data: (function () {
+                    // 生成随机值
+                    var data = [],
+                        time = (new Date()).getTime(),
+                        i;
+                    for (i = -19; i <= 0; i += 1) {
+                        data.push({
+                            x: time + i * 1000,
+                            y: Math.random()
+                        });
+                    }
+                    return data;
+                }())
+            }]
+        });
+        var clock = new Vue({
+			el: '#clock',
+			data: {
+				time: '',
+				date: ''
+			}
+		});
+    var week = ['星期天', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+    var timerID = setInterval(updateTime, 1000);
+    updateTime();
+    function updateTime() {
+        var cd = new Date();
+        clock.time = zeroPadding(cd.getHours(), 2) + ':' + zeroPadding(cd.getMinutes(), 2) + ':' + zeroPadding(cd.getSeconds(), 2);
+        clock.date = zeroPadding(cd.getFullYear(), 4) + '-' + zeroPadding(cd.getMonth()+1, 2) + '-' + zeroPadding(cd.getDate(), 2) + ' ' + week[cd.getDay()];
+    };
+    function zeroPadding(num, digit) {
+        var zero = '';
+        for(var i = 0; i < digit; i++) {
+            zero += '0';
+        }
+        return (zero + num).slice(-digit);
+    }
+</script>
+</body>
+</html>

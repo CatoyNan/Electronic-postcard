@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.Dao.ElementDaoMapper">
+    <resultMap id="ElemntResultMap" type="Element">
+       <result property="elementNumber" column="element_number"/>
+        <result property="elmentuser" column="element_username"/>
+        <result property="currentelement" column="current_element"/>
+        <result property="chargeUnit" column="charge_unit"/>
+    </resultMap>
+    <insert id="saveElemnetUser" parameterType="Element">
+        insert into element(element_number,element_username,current_element,charge_unit)
+        values(#{elementNumber},#{elmentuser},#{currentelement},#{chargeUnit})
+    </insert>
+    <update id="updateElementUser" parameterType="Element">
+        update element set element_username=#{elmentuser},
+                                charge_unit=#{chargeUnit}
+        where element_number=#{elementNumber}
+    </update>
+    <update id="updateElemnt" parameterType="Element">
+        update element set current_element=#{currentelement} where element_number=#{elementNumber}
+    </update>
+    <delete id="deleteElemntuser" parameterType="String">
+        delete from element where element_number=#{elementNumber}
+    </delete>
+    <select id="getElemntbyStaynumber" parameterType="String" resultMap="ElemntResultMap">
+        select * from element where element_username=#{elmentuser}
+    </select>
+    <select id="getElemntbynumber" parameterType="String" resultMap="ElemntResultMap">
+        select * from element where element_number=#{elementNumber}
+    </select>
+    <select id="findAllElemntUser" resultMap="ElemntResultMap">
+        select * from element
+    </select>
+    <select id="countElemntUser" resultType="int">
+        select count(*) from element
+    </select>
+</mapper>
