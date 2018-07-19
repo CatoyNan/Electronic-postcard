@@ -14,7 +14,7 @@ import java.util.List;
 
 @SpringBootApplication
 public class DemoApplication extends WebMvcConfigurerAdapter{
-
+//xutest
 	@Override
 	public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
 		super.configureMessageConverters(converters);
@@ -27,7 +27,7 @@ public class DemoApplication extends WebMvcConfigurerAdapter{
 		fastJsonHttpMessageConverter.setFastJsonConfig(fastJsonConfig);
 		converters.add(fastJsonHttpMessageConverter);
 	}
-
+//xut4est
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
 	}
