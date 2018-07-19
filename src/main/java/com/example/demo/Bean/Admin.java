@@ -9,7 +9,7 @@ public class Admin {
     private String sex;
     private String telphone;
     private String address;
-//123
+
     public String getId() {
         return id;
     }
