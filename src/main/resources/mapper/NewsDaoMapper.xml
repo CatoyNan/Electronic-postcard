@@ -35,7 +35,7 @@
         select * from news
     </select>
     <select id="getRecentNewsListtitle" resultType="News">
-        select news_title,news_type from news order by news_date DESC limit 0,5
+        select news_title,news_type,news_id from news order by news_date DESC limit 0,5
     </select>
     <select id="getRecentNewsListContent" parameterType="String" resultType="News">
         select * from news where news_title=#{news_title}
