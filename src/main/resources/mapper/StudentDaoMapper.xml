@@ -17,17 +17,17 @@
         values(#{studentNumber},#{studentPassword},#{studentName},#{studentAddress},#{studentClass},#{studentStay})
     </insert>
     <delete id="deletestudent" parameterType="String">
-        delete from student where stud_account=#{studentNumber}
+        delete from student where stu_account=#{studentNumber}
     </delete>
     <update id="updatestudent" parameterType="Student">
         update student set stu_name=#{studentName},
                         stu_address=#{studentAddress},
                         stu_class=#{studentClass},
                         stay_number=#{studentStay}
-                    where stud_account=#{studentNumber}
+                    where stu_account=#{studentNumber}
     </update>
     <update id="updatepassword"  parameterType="Student">
-        update student set stu_password=#{studentPassword} where stud_account=#{studentNumber}
+        update student set stu_password=#{studentPassword} where stu_account=#{studentNumber}
     </update>
     <select id="findAllstudentinfo" resultMap="studentInfoResult">
         select * from student
