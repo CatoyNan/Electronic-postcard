@@ -13,7 +13,7 @@
     </resultMap>
 
     <insert id="savestuent" parameterType="Student">
-        insert into student(stud_account,stu_password,stu_name,stu_address,stu_class,stay_number)
+        insert into student(stu_account,stu_password,stu_name,stu_address,stu_class,stay_number)
         values(#{studentNumber},#{studentPassword},#{studentName},#{studentAddress},#{studentClass},#{studentStay})
     </insert>
     <delete id="deletestudent" parameterType="String">
