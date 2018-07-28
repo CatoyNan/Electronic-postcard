@@ -5,10 +5,10 @@
 <mapper namespace="com.example.demo.Dao.CardChargeDaoMapper">
 
     <select id="getcardinfo" parameterType="String" resultType="CardCharge">
-        select * from student st LEFT JOIN card ca on st.stud_account=ca.stu_account where ca.stu_account=#{stu_account}
+        select * from student st LEFT JOIN card ca on st.stu_account=ca.stu_account where ca.stu_account=#{stu_account}
     </select>
     <select id="findAllCardInfo" resultType="CardCharge">
-        select * from card ca LEFT JOIN  student st on ca.stu_account=st.stud_account
+        select * from card ca LEFT JOIN  student st on ca.stu_account=st.stu_account
     </select>
     <select id="countAllCardInfo" resultType="int">
         select count(*) from card
