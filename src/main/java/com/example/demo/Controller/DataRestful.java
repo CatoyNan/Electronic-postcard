@@ -6,11 +6,18 @@ import com.example.demo.Service.StudentServiceI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import com.example.demo.Bean.Message;
+
+
 import java.util.*;
+
+
+
+
 
 @RestController
 public class DataRestful {
-
+    private Message message=Message.getInstancell();
     @Autowired
     private StudentServiceI studentServiceI;
 
@@ -46,6 +53,26 @@ public class DataRestful {
         map.put("state",false);
         map.put("Student","用户不存在");
         return map;
+    }
+
+    /**
+     * 修改用户密码
+     * @param account
+     * @param pwd
+     * @return
+     */
+    @RequestMapping(value = "/updateStudentPwd",method = RequestMethod.POST)
+    @ResponseBody
+    public Message updateUserPwd(String account,String pwd){
+        int total=studentServiceI.updateUserPwd(account,pwd);
+        if(total>0){
+            message.setSuccess(true);
+            message.setMsg("用户密码更新成功！");
+        }else{
+            message.setSuccess(false);
+            message.setMsg("用户密码更新失败！");
+        }
+        return message;
     }
 
     /**

@@ -15,6 +15,8 @@ public interface StudentServiceI {
 
     int getAllStudentcount();
 
+    int updateUserPwd(String account,String pwd);
+
     Student login(String studentAcount, String password);
 
     void SaveOrUpdateElementUser(Element element);
