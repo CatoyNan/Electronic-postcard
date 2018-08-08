@@ -75,6 +75,11 @@ public class StudentServiceImpl implements StudentServiceI {
     }
 
     @Override
+    public int updateUserPwd(String account, String pwd){
+        return studentDaoMapper.updatepassword(account,pwd);
+    }
+
+    @Override
     public void deleteElemntUser(String elementNumber) {
         elementDaoMapper.deleteElemntuser(elementNumber);
     }

@@ -15,7 +15,7 @@ public interface StudentDaoMapper {
 
     public void updatestudent(Student student);
 
-    public void updatepassword(Student student);
+    public int updatepassword(String account,String pwd);
 
     public List<Student> findAllstudentinfo();
 
