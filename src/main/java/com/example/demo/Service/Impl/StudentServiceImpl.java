@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
 
@@ -200,11 +201,13 @@ public class StudentServiceImpl implements StudentServiceI {
         }
         String path=request.getSession().getServletContext().getRealPath("/tempImage")+"/"+file.getOriginalFilename();
         File localfile=new File(path);
+//          File localfile=new File("/img");
         if(!localfile.getParentFile().exists()){
             localfile.getParentFile().mkdirs();
         }
         try {
-            file.transferTo(localfile);
+            FileOutputStream fos = new FileOutputStream(localfile);
+            fos.write(file.getBytes());
             byte [] bookImage=FileUtil.readFileByBytes(path);
             book.setBook_image("data:image/png;base64,"+Base64Util.encode(bookImage));
         } catch (IOException e) {
