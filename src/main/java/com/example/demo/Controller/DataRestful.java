@@ -162,6 +162,31 @@ public class DataRestful {
     }
 
     /**
+     * 根据学生ID和书本名字给书本评分
+     * @param studentNumber
+     * @param book_name
+     * @param stu_score
+     * @return
+     */
+    @RequestMapping(value = "/giveBookStar",method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String,Object> giveBookSource(@RequestParam("studentNumber") String studentNumber,@RequestParam("book_name") String book_name,@RequestParam("stu_score") double stu_score){
+        Map<String,Object> map=new HashMap<String,Object>();
+        int total = bookDaoMapper.getStuBookComment_Count(studentNumber,book_name);
+        if(total>0){
+            map.put("state",false);
+            map.put("msg","你已评价过，无法再评价");
+            return map;
+        }
+        else {
+            bookDaoMapper.setStu_source(studentNumber,book_name,stu_score);
+            map.put("state",true);
+            map.put("msg","评价成功");
+            return map;
+        }
+    }
+
+    /**
      * 校园卡充值数据接口
      * @param studentaccount
      * @param charge_money
