@@ -185,6 +185,29 @@ public class DataRestful {
             return map;
         }
     }
+    /**
+     * 根据书本名字给出综合评价分数和评论
+     * @param book_name
+     * @return
+     */
+    @RequestMapping(value = "/getBookScoreAndComments",method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String,Object> getBookScoreAndComments(@RequestParam("book_name") String book_name){
+        Map<String,Object> map=new HashMap<String,Object>();
+        double Score = bookDaoMapper.getBookScore(book_name);
+        List<bookCommentary> Commentaries=bookDaoMapper.getBookComments(book_name);
+        if(Score>0 &&  Commentaries!=null){
+            map.put("state",true);
+            map.put("comment",Commentaries);
+            map.put("score",Score);
+            return map;
+        }
+        else {
+            map.put("state",false);
+            map.put("msg","获取失败");
+            return map;
+        }
+    }
 
     /**
      * 校园卡充值数据接口
