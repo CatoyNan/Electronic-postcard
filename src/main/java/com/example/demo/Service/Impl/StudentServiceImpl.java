@@ -201,7 +201,6 @@ public class StudentServiceImpl implements StudentServiceI {
         }
         String path=request.getSession().getServletContext().getRealPath("/tempImage")+"/"+file.getOriginalFilename();
         File localfile=new File(path);
-//          File localfile=new File("/img");
         if(!localfile.getParentFile().exists()){
             localfile.getParentFile().mkdirs();
         }

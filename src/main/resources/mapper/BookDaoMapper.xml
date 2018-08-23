@@ -43,4 +43,16 @@
     <update id="book_renewal">
         update borrow_bookinfo set book_int_time=#{book_int_time} where book_uid=#{book_uid} and book_name=#{book_name}
     </update>
+    <select id="getStuBookComment_Count" parameterType="String" resultType="int">
+        select count(*) from book_commentary where stu_account=#{studentNumber} and book_name=#{book_name} and stu_score is not null
+    </select>
+    <select id="getBookScore" parameterType="String" resultType="double">
+        SELECT AVG(stu_score) FROM book_commentary where book_name=#{book_name}
+    </select>
+    <select id="getBookComments" parameterType="String" resultType="bookCommentary">
+        SELECT stu_account,stu_comment,stu_score FROM book_commentary where book_name=#{book_name}
+    </select>
+    <insert id="setStu_source">
+        insert into book_commentary(book_name,stu_account,stu_score) values(#{book_name},#{studentNumber},#{stu_score})
+    </insert>
 </mapper>

@@ -1,6 +1,7 @@
 package com.example.demo.Dao;
 
 import com.example.demo.Bean.Book;
+import com.example.demo.Bean.bookCommentary;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -33,4 +34,12 @@ public interface BookDaoMapper {
     int deleteStu_bookInfo(String stu_account);
 
     int book_renewal(@Param("book_uid") String book_uid, @Param("book_name") String book_name,@Param("book_int_time") Date book_int_time);
+
+    int getStuBookComment_Count(@Param("studentNumber") String studentNumber,@Param("book_name") String book_name);
+
+    void setStu_source(@Param("studentNumber") String studentNumber,@Param("book_name") String book_name,@Param("stu_score") double stu_score);
+
+    double getBookScore(@Param("book_name") String book_name);
+
+    List<bookCommentary> getBookComments(@Param("book_name") String book_name);
 }
