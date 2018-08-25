@@ -162,7 +162,7 @@ public class DataRestful {
     }
 
     /**
-     * 根据学生ID和书本名字给书本评分
+     * 根据学生ID和书本名字给书本星星评分
      * @param studentNumber
      * @param book_name
      * @param stu_score
@@ -186,7 +186,7 @@ public class DataRestful {
         }
     }
     /**
-     * 根据书本名字给出综合评价分数和评论
+     * 根据书本名字得到综合评价分数和评论
      * @param book_name
      * @return
      */
@@ -194,9 +194,15 @@ public class DataRestful {
     @ResponseBody
     public Map<String,Object> getBookScoreAndComments(@RequestParam("book_name") String book_name){
         Map<String,Object> map=new HashMap<String,Object>();
-        double Score = bookDaoMapper.getBookScore(book_name);
+        double Score;
+        if(bookDaoMapper.getBookScore(book_name)==null){
+             Score = 0;
+        }
+        else{
+             Score = bookDaoMapper.getBookScore(book_name).doubleValue();
+        }
         List<bookCommentary> Commentaries=bookDaoMapper.getBookComments(book_name);
-        if(Score>0 &&  Commentaries!=null){
+        if(Commentaries!=null){
             map.put("state",true);
             map.put("comment",Commentaries);
             map.put("score",Score);
@@ -205,6 +211,26 @@ public class DataRestful {
         else {
             map.put("state",false);
             map.put("msg","获取失败");
+            return map;
+        }
+    }
+
+    /**
+     * 学生给书本评价
+     * @param book_name
+     * @return
+     */
+    @RequestMapping(value = "/giveComments",method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String,Object> giveComments(@RequestParam("book_name") String book_name,@RequestParam("studentNumber") String studentNumber,@RequestParam("comment") String comment){
+        Map<String,Object> map=new HashMap<String,Object>();
+        if(comment.length()>0){
+            bookDaoMapper.givComments(book_name,studentNumber,comment);
+            map.put("state",true);
+            return map;
+        }
+        else{
+            map.put("state",false);
             return map;
         }
     }
