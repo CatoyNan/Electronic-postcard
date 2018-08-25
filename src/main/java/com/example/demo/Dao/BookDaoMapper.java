@@ -39,7 +39,9 @@ public interface BookDaoMapper {
 
     void setStu_source(@Param("studentNumber") String studentNumber,@Param("book_name") String book_name,@Param("stu_score") double stu_score);
 
-    double getBookScore(@Param("book_name") String book_name);
+    Double getBookScore(@Param("book_name") String book_name);
 
     List<bookCommentary> getBookComments(@Param("book_name") String book_name);
+
+    void givComments(@Param("book_name") String book_name,@Param("studentNumber") String studentNumber,@Param("comment") String comment);
 }
