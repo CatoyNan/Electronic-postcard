@@ -171,19 +171,23 @@ public class StudentMangerController {
     /**
      * 保存或更新发布的新闻信息
      * @param news
+     * @param request
+     * @param file
      * @return
      */
     @RequestMapping(value = "/SaveNewsInfo",method = RequestMethod.POST)
     @ResponseBody
-    public  Message SaveNewsInfo(News news){
-        int total=studentServiceI.SaveNewsInfo(news);
-        if(total>0){
-            message.setSuccess(true);
-            message.setMsg("新闻编辑成功！");
-        }else{
-            message.setSuccess(false);
-            message.setMsg("新闻编辑失败，请稍后重试！");
-        }
+    public  Message SaveNewsInfo(News news,HttpServletRequest request,@RequestParam("newsImage") MultipartFile file){
+        Message message=studentServiceI.SaveNewsInfo(news,file,request);
+//        if(total>0){
+//            message.setSuccess(true);
+//            message.setMsg("新闻编辑成功！");
+//        }else{
+//            message.setSuccess(false);
+//            message.setMsg("新闻编辑失败，请稍后重试！");
+//        }
+//        message.setMsg("成功");
+//        message.setSuccess(true);
         return message;
     }
 

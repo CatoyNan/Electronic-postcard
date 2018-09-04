@@ -11,6 +11,9 @@ public class News {
     private String news_author;
     private String news_content;
     private String news_type;
+    private String news_image;
+
+
 
     @JSONField(format = "yyyy-MM-dd")
     private Date news_date;
@@ -61,5 +64,13 @@ public class News {
 
     public void setNews_type(String news_type) {
         this.news_type = news_type;
+    }
+
+    public String getNews_image() {
+        return news_image;
+    }
+
+    public void setNews_image(String news_image) {
+        this.news_image = news_image;
     }
 }

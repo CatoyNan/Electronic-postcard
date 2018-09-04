@@ -4,8 +4,8 @@
         "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.Dao.NewsDaoMapper">
     <insert id="SaveNews" parameterType="News">
-        insert into news(news_title,news_author,news_content,news_type,news_date)
-        values(#{news_title},#{news_author},#{news_content},#{news_type},#{news_date})
+        insert into news(news_title,news_author,news_content,news_type,news_date,news_image)
+        values(#{news_title},#{news_author},#{news_content},#{news_type},#{news_date},#{news_image})
     </insert>
     <update id="updateNews" parameterType="News">
         update news

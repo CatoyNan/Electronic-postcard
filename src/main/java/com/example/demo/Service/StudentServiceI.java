@@ -29,7 +29,7 @@ public interface StudentServiceI {
 
     void elementcharge(Element element);
 
-    int SaveNewsInfo(News news);
+    Message SaveNewsInfo(News news,MultipartFile file,HttpServletRequest request);
 
     int deleteNewsInfo(String news_id);
 

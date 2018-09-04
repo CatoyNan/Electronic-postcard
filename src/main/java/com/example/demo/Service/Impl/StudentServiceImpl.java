@@ -113,13 +113,44 @@ public class StudentServiceImpl implements StudentServiceI {
     }
 
     @Override
-    public int SaveNewsInfo(News news) {
+    public Message SaveNewsInfo(News news,MultipartFile file,HttpServletRequest request) {
+        Message message = Message.getInstancell();
+        if(file.getOriginalFilename().equals("")){
+            message.setSuccess(false);
+            message.setMsg("新闻图片不能为空！");
+            return message;
+        }
+        String path = request.getSession().getServletContext().getRealPath("/tempImage")+"/"+file.getOriginalFilename();
+        File localfile = new File(path);
+        if(!localfile.getParentFile().exists()){
+            localfile.getParentFile().mkdirs();
+        }
+        try {
+            FileOutputStream fos = new FileOutputStream(localfile);
+            fos.write(file.getBytes());
+            byte [] newsImage=FileUtil.readFileByBytes(path);
+            news.setNews_image("data:image/png;base64,"+Base64Util.encode(newsImage));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         if(news.getNews_id()!=null && !news.getNews_id().equals("")){
             news.setNews_date(new Date());
-            return newsDaoMapper.updateNews(news);
+            if(newsDaoMapper.updateNews(news)>0){
+                message.setSuccess(true);
+                message.setMsg("保存成功!");
+                return message;
+            }else{
+                message.setSuccess(false);
+                message.setMsg("无法保存！");
+                return message;
+            }
+
         }else{
             news.setNews_date(new Date());
-            return newsDaoMapper.SaveNews(news);
+            newsDaoMapper.SaveNews(news);
+            message.setSuccess(true);
+            message.setMsg("保存成功！");
+            return message;
         }
     }
 
