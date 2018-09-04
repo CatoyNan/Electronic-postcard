@@ -11,6 +11,9 @@
     function saveNews() {
         $('#NewsmanagerForm').form('submit', {
             url:"/demo/SaveNewsInfo",
+            onBeforeLoad:function(){
+                $.messager.progress();
+            },
             success:function(data){
                 var obj=$.parseJSON(data);
                 if(obj.success) {
@@ -23,6 +26,9 @@
                         showType: 'show'
                     });
                 }
+            },
+            error:function () {
+                alert("出错了，请联系管理员！");
             }
         });
     }
@@ -100,7 +106,7 @@
     <div id="Newsmanager_dialog" class="easyui-dialog" style="width:750px;height:700px;padding:20px;"
                   data-options="iconCls:'icon-edit',resizable:true,modal:true,buttons:'#Newsmanager_button',closable:false,closed:true ">
         <div class="ftitle">编辑新闻</div>
-        <form  id="NewsmanagerForm" method="post">
+        <form  id="NewsmanagerForm" method="post" enctype="multipart/form-data">
             <div class="fitem" style="text-align: center">
                     <input name="news_id" id="news_id" type="hidden">
                     <label>新闻类型</label>
@@ -125,6 +131,10 @@
                         <option value="校长办公室">校长办公室</option>
                         <option value="团委">团委</option>
                     </select>
+            </div>
+            <div class="fitem" style="text-align:center">
+                <label>上传图片</label>
+                <input class="easyui-filebox" name="newsImage" id="newsImage" data-options="prompt:'Choose a file...'" style="width:250px;height:25px">
             </div>
             <div class="ftitle">新闻内容</div>
             <div class="fitem" style="text-align: center">
