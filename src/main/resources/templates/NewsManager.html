@@ -36,7 +36,7 @@
                  $('#Newsmanager_datagrid').datagrid('selectRow',rowindex);
         var row=$('#Newsmanager_datagrid').datagrid('getSelected');
         if(row){
-            $('#Newsmanager.0Form').form('load',row);
+            $('#NewsmanagerForm').form('load',row);
             $('#Newsmanager_dialog').dialog('open').dialog('setTitle','编辑新闻信息');
         }
     }

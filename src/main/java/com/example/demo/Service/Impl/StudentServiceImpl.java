@@ -112,6 +112,13 @@ public class StudentServiceImpl implements StudentServiceI {
         elementDaoMapper.updateElemnt(element);
     }
 
+    /**
+     * 保存新闻信息
+     * @param news
+     * @param file
+     * @param request
+     * @return
+     */
     @Override
     public Message SaveNewsInfo(News news,MultipartFile file,HttpServletRequest request) {
         Message message = Message.getInstancell();
