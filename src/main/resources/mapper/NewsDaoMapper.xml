@@ -37,6 +37,9 @@
     <select id="getRecentNewsListtitle" resultType="News">
         select news_title,news_type,news_id,news_image from news order by news_date DESC
     </select>
+    <select id="getRecentNewsListtitleByType" parameterType="String" resultType="News">
+        select news_title,news_type,news_id,news_image from news where news_type=#{new_type} order by news_date DESC
+    </select>
     <select id="getRecentNewsListContent" parameterType="String" resultType="News">
         select * from news where news_title=#{news_title}
     </select>

@@ -14,6 +14,8 @@ public interface NewsDaoMapper {
 
     public List<News> getRecentNewsListtitle();
 
+    public List<News> getRecentNewsListtitleByType(String news_type);
+
     int getAllNewsRecordNumber();
 
     News getRecentNewsListContent(String news_titles);

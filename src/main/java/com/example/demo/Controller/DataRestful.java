@@ -89,6 +89,22 @@ public class DataRestful {
     }
 
     /**
+     * 校园新闻动态标题数据接口(根据新闻类型返回数据)
+     * @param news_type
+     * @return
+     */
+    @RequestMapping(value = "/findAllNewsListtitleRecentByType",method = RequestMethod.GET)
+    @ResponseBody
+    public  Map<String,Object> findAllNewsListtitleRecent(@RequestParam("news_type") String news_type){
+        Map<String,Object> map=new HashMap<String,Object>();
+        map.put("state",true);
+        map.put("reslut",newsDaoMapper.getRecentNewsListtitleByType(news_type));
+        return map;
+    }
+
+
+
+    /**
      * 校园新闻动态内容数据接口
      * @return
      */
