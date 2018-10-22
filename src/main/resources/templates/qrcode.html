@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.springframework.org/schema/mvc">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="/js/qrcode.js"></script>
+    <style media="screen">
+        div {
+            border: 1px solid red;
+            width: 200px;
+            height: 200px;
+        }
+    </style>
+    <title>二维码</title>
+</head>
+<body>
+<div id="father"></div>
+
+<script th:inline="javascript" type="text/javascript">
+    var url = [[${url}]];
+    var qrnode = new AraleQRCode({
+        render:'canvas',
+        correctLevel: 0,
+        text: url,
+        size:300,
+        background: '#eeeeee',
+        foreground: '#667766',
+        pdground: '#00aaee'
+    });
+    document.getElementById("father").appendChild(qrnode);
+</script>
+</body>
+</html>

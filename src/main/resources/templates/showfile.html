@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.springframework.org/schema/mvc">
+<head>
+    <meta charset="UTF-8">
+    <title>文件展示</title>
+    <style>
+        img {
+            display: none;
+        }
+        video {
+            display: none;
+        }
+        audio {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <img id="img" src="" alt="">
+    <audio id="audio" controls="controls" src=""></audio>
+    <video id="video" src="" controls="controls" width="500" height="300"></video>
+    <script th:inline="javascript">
+        var path = [[${path}]];
+        var type = [[${type}]];
+        var oimg = document.getElementById("img");
+        var ovideo = document.getElementById("video");
+        var oaudio = document.getElementById("audio");
+        if(type.search("image")!=-1){
+            oimg.style.display = "block";
+            oimg.src = path;
+        }
+        else if(type.search("video")!=-1){
+            ovideo.style.display = "block";
+            ovideo.src = path;
+        }
+        else if(type.search("audio")!=-1){
+            oaudio.style.display = "block";
+            oaudio.src = path;
+        }
+        else {
+            alert("文件类型不支持");
+        }
+    </script>
+</body>
+</html>

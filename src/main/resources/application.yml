@@ -1,11 +1,13 @@
 server:
-  port: 8082
-  context-path: /demo
+  port: 8085
+#  context-path: /demo
+  tomcat:
+    basedir: logistics/tomcat
 spring:
   thymeleaf:
     cache: false
   datasource:
-    url: jdbc:mysql://localhost:3306/school
+    url: jdbc:mysql://localhost:3306/electronicpostcard
     username: root
     password: 123456
     driver-class-name: com.mysql.jdbc.Driver
@@ -13,6 +15,20 @@ spring:
       max-active: 20
       max-idle: 8
       min-idle: 5
+  http:
+    multipart:
+      max-file-size: 100Mb
+      max-request-size: 100Mb
+  web:
+    upload-path: /home/admin/card/
+#     upload-path: D:/tts/
+  mvc:
+    static-path-pattern: /**
+  resources:
+    static-locations: classpath:/META-INF/resources/,classpath:/resources/,
+                        classpath:/static/,classpath:/public/,file:/home/admin/card/
+#    static-locations: classpath:/META-INF/resources/,classpath:/resources/,
+#                           classpath:/static/,classpath:/public/,file:D:/tts/
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   configuration:

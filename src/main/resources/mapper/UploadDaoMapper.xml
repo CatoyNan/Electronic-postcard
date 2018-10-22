@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.Dao.UploadDaoMapper">
+    <insert id="saveFile" parameterType="Portrait">
+        insert into portrait(file_url,file_path,file_type,file_name)
+        values(#{file_url},#{file_path},#{file_type},#{file_name})
+    </insert>
+    <insert id="SaveNews" parameterType="News">
+        insert into news(news_title,news_author,news_content,news_type,news_date,news_image)
+        values(#{news_title},#{news_author},#{news_content},#{news_type},#{news_date},#{news_image})
+    </insert>
+    <update id="updateNews" parameterType="News">
+        update news
+        <set>
+            <if test="news_title!=null and news_title!=''">
+                news_title=#{news_title},
+            </if>
+            <if test="news_author!=null and news_author!=''">
+                news_author=#{news_author},
+            </if>
+            <if test="news_content!=null and news_content!=''">
+                news_content=#{news_content},
+            </if>
+            <if test="news_type!=null and news_type!=''">
+                news_type=#{news_type},
+            </if>
+            <if test="news_date!=null">
+                news_date=#{news_date},
+            </if>
+        </set>
+        where news_id=#{news_id}
+    </update>
+    <delete id="deleteNews" parameterType="String">
+        delete from news where news_id=#{news_id}
+    </delete>
+    <select id="findAllNewsList" resultType="News">
+        select * from news
+    </select>
+    <select id="getRecentNewsListtitle" resultType="News">
+        select news_title,news_type,news_id,news_image from news order by news_date DESC
+    </select>
+    <select id="getRecentNewsListtitleByType" parameterType="String" resultType="News">
+        select news_title,news_type,news_id,news_image from news where news_type=#{new_type} order by news_date DESC
+    </select>
+    <select id="getRecentNewsListContent" parameterType="String" resultType="News">
+        select * from news where news_title=#{news_title}
+    </select>
+    <select id="getAllNewsRecordNumber" resultType="int">
+        select count(*) from news
+    </select>
+</mapper>
