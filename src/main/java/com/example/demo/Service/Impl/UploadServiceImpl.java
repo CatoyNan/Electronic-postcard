@@ -5,6 +5,7 @@ import com.example.demo.Dao.UploadDaoMapper;
 import com.example.demo.Service.UploadServiceI;
 import com.example.demo.utils.DateUtil;
 import com.example.demo.utils.FileUtil;
+import com.example.demo.utils.ImageCompression;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,8 +34,6 @@ public class UploadServiceImpl implements UploadServiceI {
         try {
             uuidFileName = FileUtil.uploadFile(fileName);
             path = filePath+"/"+uuidFileName;
-            url = "http://www.catoy.top:8085/showfile?path="+currentTime+"/"+uuidFileName+"&type="+contentType;
-//            url = "localhost:8085/showfile?path="+currentTime+"/"+uuidFileName+"&type="+contentType;
         } catch (Exception e) {
             // TODO: handle exception
         }
@@ -47,9 +46,22 @@ public class UploadServiceImpl implements UploadServiceI {
             out.write(file.getBytes());
             out.flush();
             out.close();
+            if(contentType.indexOf("image")!=-1){
+                uuidFileName = FileUtil.uploadFile(uuidFileName);
+                ImageCompression.yasuo(path,filePath+"/",uuidFileName);//压缩图片删除原图
+            }
+            else if(contentType.indexOf("audo")!=-1){
+
+            }
+            else if(contentType.indexOf("video")!=-1){
+
+            }
+
         }catch (Exception e){
 
         }
+        url = "http://www.catoy.top:8085/showfile?path="+currentTime+"/"+uuidFileName+"&type="+contentType;
+//        url = "localhost:8085/showfile?path="+currentTime+"/"+uuidFileName+"&type="+contentType;
         Portrait portrait = new Portrait();
         portrait.setFile_url(url);
         portrait.setFile_path(path);
