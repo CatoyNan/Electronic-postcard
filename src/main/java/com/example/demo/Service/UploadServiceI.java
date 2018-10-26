@@ -7,4 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 
 public interface UploadServiceI {
     String saveFile(MultipartFile file, HttpServletRequest request);
+    String getIdByUrl(String url);
+    String getUrlById(String id);
 }

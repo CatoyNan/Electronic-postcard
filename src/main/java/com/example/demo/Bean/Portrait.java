@@ -1,17 +1,17 @@
 package com.example.demo.Bean;
 
 public class Portrait {
-    private int file_id;
+    private String file_id;
     private String file_url;
     private String file_path;
     private String file_type;
     private String file_name;
 
-    public int getFile_id() {
+    public String getFile_id() {
         return file_id;
     }
 
-    public void setFile_id(int file_id) {
+    public void setFile_id(String file_id) {
         this.file_id = file_id;
     }
 

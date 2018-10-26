@@ -15,12 +15,15 @@ import java.io.File;
 import java.io.FileOutputStream;
 @Service
 public class UploadServiceImpl implements UploadServiceI {
-//    @Value("${web.upload-path}")
-//    private String filePath;
-
     @Resource
     private UploadDaoMapper uploadDaoMapper;
 
+    /**
+     //     * 保存文件路径path，访问链接url,返回url。
+     //     * @param file
+     //     * @param request
+     //     * @return String
+     //     */
     @Override
     public String saveFile(MultipartFile file, HttpServletRequest request){
         String path = null;
@@ -69,5 +72,25 @@ public class UploadServiceImpl implements UploadServiceI {
         portrait.setFile_name(uuidFileName);
         uploadDaoMapper.saveFile(portrait);
         return portrait.getFile_url();
+    }
+
+    /**
+     //     * 根据url返回id
+     //     * @param url
+     //     * @return id
+     //     */
+    @Override
+    public String getIdByUrl(String url){
+        return uploadDaoMapper.getIdByUrl(url);
+    }
+
+    /**
+     //     * 根据id返回url
+     //     * @param id
+     //     * @return url
+     //     */
+    @Override
+    public String getUrlById(String id){
+        return uploadDaoMapper.getUrlById(id);
     }
 }
