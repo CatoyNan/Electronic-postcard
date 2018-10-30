@@ -1,0 +1,42 @@
+<!doctype html>
+<html xmlns:th="http://www.springframework.org/schema/mvc">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>聆听时光</title>
+<style>
+#vi{
+	position: relative;
+	left:10%;
+	margin-top:60%;
+}
+</style>
+<script>
+setTimeout(function () {
+        plus.nativeUI.toast('该页面需要横屏查看'); // 友好的提示一下
+        plus.screen.lockOrientation("landscape-primary") // 把屏幕方向改变成横屏正方向
+    }, 1000)
+</script>
+</head>
+
+<body background="Images/video_bg.jpg"
+style=" background-repeat:no-repeat ;
+background-size:100% 100%;
+background-attachment: fixed;">
+ <div>
+   <video id="vi" src="16500895.mp4" controls width="80%" height="80%">您的浏览器不支持</video>
+   </div>
+ <script th:inline="javascript">
+     var path = [[${path}]];
+     var type = [[${type}]];
+     var ovideo = document.getElementById("vi");
+     if(type.search("video")!=-1){
+         ovideo.src = path;
+     }
+     else {
+         alert("文件类型不支持");
+     }
+ </script>
+</body>
+</html>

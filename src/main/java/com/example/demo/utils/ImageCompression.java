@@ -8,7 +8,7 @@ public class ImageCompression {
     public static boolean yasuo(String inputPath,String outputPath,String fileName)throws Exception{
         Thumbnails.of(inputPath)
                 .size(400,500)
-                .outputQuality(0.5f)
+                .outputQuality(0.8f)
                 .toFile(outputPath+fileName);
         File file = new File(inputPath);
         if (file.exists() && file.isFile()) {

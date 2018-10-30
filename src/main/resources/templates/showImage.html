@@ -1,0 +1,73 @@
+<!doctype html>
+<html xmlns:th="http://www.springframework.org/schema/mvc">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>聆听时光</title>
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+    }
+    #bg{
+        position:fixed;
+        width:100%;
+        height:100%;
+        vertical-align: middle;
+        display: table-cell;
+        text-align: center;
+        display: none;
+        animation: showImg 1s;
+    }
+    #im{
+        width:90%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+        z-index: -1;
+        border-radius: 1em;
+        display: none;
+        animation: showImg 1s;
+    }
+    @keyframes showImg {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+</style>
+</head>
+<body background="Images/image_bg1.jpg"
+style=" background-repeat:no-repeat ;
+background-size:100% 100%;
+background-attachment: fixed;">
+  <div>
+      <img id='bg' src='Images/image_bg2.png'/>
+      <img id="im" src="">
+   </div>
+  <script th:inline="javascript">
+      var path = [[${path}]];
+      var type = [[${type}]];
+      var oimg = document.getElementById("im");
+      var obg = document.getElementById("bg");
+      if(type.search("image")!=-1){
+          oimg.src = path;
+          obg.onload = function () {
+              obg.style = "display:block";
+          }
+          oimg.onload = function () {
+              oimg.style = "display:inline-block";
+          }
+      }
+      else {
+          alert("文件类型不支持");
+      }
+  </script>
+</body>
+</html>

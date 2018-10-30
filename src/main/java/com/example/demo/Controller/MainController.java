@@ -56,13 +56,25 @@ public class MainController {
      */
     @RequestMapping(value = "/showfile",method = RequestMethod.GET)
     public String showfile(@RequestParam("path") String path, @RequestParam("type") String type, Model model){
-        try {
-            model.addAttribute("path",path);
-            model.addAttribute("type",type);
-        }catch(Exception e){
-
+        model.addAttribute("path",path);
+        model.addAttribute("type",type);
+        if(type.contains("image")){
+            model.addAttribute("status","true");
+            return "showImage";
         }
-        return "showfile";
+        else if(type.contains("audio")){
+            model.addAttribute("status","true");
+            return "showAudio";
+        }
+        else if(type.contains("video")){
+            model.addAttribute("status","true");
+            return "showVideo";
+        }
+        else {
+            model.addAttribute("status","false");
+            System.out.println("文件类型不符合要求");
+            return "";
+        }
     }
 
     /*

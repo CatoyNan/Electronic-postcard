@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.springframework.org/schema/mvc">
+<head>
+    <title>H5 audio Demo</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link href="css/audio.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="js/audio.js"></script>
+</head>
+
+<body  background="Images/audio_bg.jpg"
+style=" background-repeat:no-repeat ;
+background-size:100% 100%;
+background-attachment: fixed;">
+    <div class="audio-wrapper">
+        <audio>
+            <source id="audio_src" src="">
+        </audio>
+        <div class="audio-left">
+            <img id="audioPlayer" src="Images/audio_play.png">
+        </div>
+        <div class="audio-right" style="opacity:0;" >
+            <p style="max-width: 536px;"></p>
+            <div class="progress-bar-bg" id="progressBarBg">
+                <span id="progressDot"></span>
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <div class="audio-time">
+                <span class="audio-length-current" id="audioCurTime"></span>
+                <span class="audio-length-total"></span>
+            </div>
+        </div>
+    </div>
+    <script th:inline="javascript">
+        var path = [[${path}]];
+        var type = [[${type}]];
+        var oaudio = document.getElementById("audio_src");
+        if(type.search("audio")!=-1){
+            oaudio.src = path;
+        }
+        else {
+            alert("文件类型不支持");
+        }
+    </script>
+</body>
+
+</html>
