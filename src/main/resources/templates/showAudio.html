@@ -1,11 +1,28 @@
 ﻿<!DOCTYPE html>
 <html xmlns:th="http://www.springframework.org/schema/mvc">
 <head>
-    <title>H5 audio Demo</title>
+    <title>聆听时光</title>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <link href="css/audio.css" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="js/audio.js"></script>
+    <style>
+        body {
+            overflow-y: hidden;
+        }
+        img {
+            display: none;
+            animation: showImg 1s;
+        }
+        @keyframes showImg {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+    </style>
 </head>
 
 <body  background="Images/audio_bg.jpg"
@@ -31,10 +48,20 @@ background-attachment: fixed;">
             </div>
         </div>
     </div>
+    <!--<script type="text/javascript" src="js/alert.js"></script>-->
     <script th:inline="javascript">
         var path = [[${path}]];
         var type = [[${type}]];
         var oaudio = document.getElementById("audio_src");
+        var oplay = document.getElementById("audioPlayer");
+        var oaudio_src = document.getElementById("audio_src");
+        oaudio_src.onload = function(){
+            oplay.style.display = "inline-block";
+        }
+        // oplay.onload = function () {
+        //
+        // }
+
         if(type.search("audio")!=-1){
             oaudio.src = path;
         }

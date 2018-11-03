@@ -83,7 +83,6 @@ public class MainController {
     @RequestMapping(value = "/getqrimageById",method = RequestMethod.GET)
     public String getqrimageById(@RequestParam("id") String id, Model model){
         String url = uploadServiceI.getUrlById(id);
-//        System.out.println(url!=null);
         if(url != null){
             model.addAttribute("url",url);
             model.addAttribute("id",id);

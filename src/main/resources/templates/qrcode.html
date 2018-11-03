@@ -43,7 +43,9 @@
         <span id="userid-span">
         </span>
     </div>
-<script th:inline="javascript" type="text/javascript">
+
+    <script type="text/javascript" src="js/alert.js"></script>
+    <script th:inline="javascript" type="text/javascript">
     var status = [[${status}]];
     if(status == 'true'){
         var url = [[${url}]];
@@ -59,11 +61,17 @@
         });
         document.getElementById("father").appendChild(qrnode);
         document.getElementById("userid-span").innerText = id;
-        alert(url);
+        // alert(url);
     }
     else {
         alert('文件不存在');
     }
+
+    //禁止返回
+    history.pushState(null, null, document.URL);
+    window.addEventListener('popstate', function () {
+        history.pushState(null, null, document.URL);
+    });
 </script>
 </body>
 </html>
